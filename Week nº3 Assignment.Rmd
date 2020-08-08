@@ -1,0 +1,193 @@
+---
+title: "Week Nº3 Assignment"
+author: "S.U"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: ioslides_presentation
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(plotly)
+library(readxl)
+library(rjson)
+library(rgdal)
+library(dplyr)
+US_elect <- read.csv("/Users/seba/Desktop/DATA/usa-2016-presidential-election-by-county.csv", sep = ";")
+
+plist <- unique(US_elect$ST) 
+lst <- setNames(vector("list", length(plist)), plist)
+ for (i in seq_along(plist)) {
+   lst[[i]] <- US_elect %>%
+                  select(State, ST, Votes,Democrats.12..Votes., Votes16.Clintonh, Republicans.12..Votes.,  Votes16.Trumpd) %>% 
+                  filter(ST %in% plist[i])
+ }
+
+AR <- colSums(lst[["AR"]][,c(3:7)]); AR <- t(AR); AR <- as.data.frame(AR); AR$ST <- "AR"
+OR <- colSums(lst[["OR"]][,c(3:7)]); OR <- t(OR); OR <- as.data.frame(OR); OR$ST <- "OR"
+ME <- colSums(lst[["ME"]][,c(3:7)]); ME <- t(ME); ME <- as.data.frame(ME); ME$ST <- "ME"
+MS <- colSums(lst[["MS"]][,c(3:7)]); MS <- t(MS); MS <- as.data.frame(MS); MS$ST <- "MS"
+SD <- colSums(lst[["SD"]][,c(3:7)]); SD <- t(SD); SD <- as.data.frame(SD); SD$ST <- "SD"
+IN <- colSums(lst[["IN"]][,c(3:7)]); IN <- t(IN); IN <- as.data.frame(IN); IN$ST <- "IN"
+AZ <- colSums(lst[["AZ"]][,c(3:7)]); AZ <- t(AZ); AZ <- as.data.frame(AZ); AZ$ST <- "AZ"
+CA <- colSums(lst[["CA"]][,c(3:7)]); CA <- t(CA); CA <- as.data.frame(CA); CA$ST <- "CA"
+GA <- colSums(lst[["GA"]][,c(3:7)]); GA <- t(GA); GA <- as.data.frame(GA); GA$ST <- "GA"
+VA <- colSums(lst[["VA"]][,c(3:7)]); VA <- t(VA); VA <- as.data.frame(VA); VA$ST <- "VA"
+VT <- colSums(lst[["VT"]][,c(3:7)]); VT <- t(VT); VT <- as.data.frame(VT); VT$ST <- "VT"
+MO <- colSums(lst[["MO"]][,c(3:7)]); MO <- t(MO); MO <- as.data.frame(MO); MO$ST <- "MO"
+KY <- colSums(lst[["KY"]][,c(3:7)]); KY <- t(KY); KY <- as.data.frame(KY); KY$ST <- "KY"
+AK <- colSums(lst[["AK"]][,c(3:7)]); AK <- t(AK); AK <- as.data.frame(AK); AK$ST <- "AK"
+LA <- colSums(lst[["LA"]][,c(3:7)]); LA <- t(LA); LA <- as.data.frame(LA); LA$ST <- "LA"
+NE <- colSums(lst[["NE"]][,c(3:7)]); NE <- t(NE); NE <- as.data.frame(NE); NE$ST <- "NE"
+MD <- colSums(lst[["MD"]][,c(3:7)]); MD <- t(MD); MD <- as.data.frame(MD); MD$ST <- "MD"
+TX <- colSums(lst[["TX"]][,c(3:7)]); TX <- t(TX); TX <- as.data.frame(TX); TX$ST <- "TX"
+MT <- colSums(lst[["MT"]][,c(3:7)]); MT <- t(MT); MT <- as.data.frame(MT); MT$ST <- "MT"
+CO <- colSums(lst[["CO"]][,c(3:7)]); CO <- t(CO); CO <- as.data.frame(CO); CO$ST <- "CO"
+FL <- colSums(lst[["FL"]][,c(3:7)]); FL <- t(FL); FL <- as.data.frame(FL); FL$ST <- "FL"
+MN <- colSums(lst[["MN"]][,c(3:7)]); MN <- t(MN); MN <- as.data.frame(MN); MN$ST <- "MN"
+IA <- colSums(lst[["IA"]][,c(3:7)]); IA <- t(IA); IA <- as.data.frame(IA); IA$ST <- "IA"
+OK <- colSums(lst[["OK"]][,c(3:7)]); OK <- t(OK); OK <- as.data.frame(OK); OK$ST <- "OK"
+IL <- colSums(lst[["IL"]][,c(3:7)]); IL <- t(IL); IL <- as.data.frame(IL); IL$ST <- "IL"
+NY <- colSums(lst[["NY"]][,c(3:7)]); NY <- t(NY); NY <- as.data.frame(NY); NY$ST <- "NY"
+OH <- colSums(lst[["OH"]][,c(3:7)]); OH <- t(OH); OH <- as.data.frame(OH); OH$ST <- "OH"
+TN <- colSums(lst[["TN"]][,c(3:7)]); TN <- t(TN); TN <- as.data.frame(TN); TN$ST <- "TN"
+NY <- colSums(lst[["NY"]][,c(3:7)]); NY <- t(NY); NY <- as.data.frame(NY); NY$ST <- "NY"
+WV <- colSums(lst[["WV"]][,c(3:7)]); WV <- t(WV); WV <- as.data.frame(WV); WV$ST <- "WV"
+ND <- colSums(lst[["ND"]][,c(3:7)]); ND <- t(ND); ND <- as.data.frame(ND); ND$ST <- "ND"
+NC <- colSums(lst[["NC"]][,c(3:7)]); NC <- t(NC); NC <- as.data.frame(NC); NC$ST <- "NC"
+PA <- colSums(lst[["PA"]][,c(3:7)]); PA <- t(PA); PA <- as.data.frame(PA); PA$ST <- "PA"
+UT <- colSums(lst[["UT"]][,c(3:7)]); UT <- t(UT); UT <- as.data.frame(UT); UT$ST <- "UT"
+AL <- colSums(lst[["AL"]][,c(3:7)]); AL <- t(AL); AL <- as.data.frame(AL); AL$ST <- "AL"
+NM <- colSums(lst[["NM"]][,c(3:7)]); NM <- t(NM); NM <- as.data.frame(NM); NM$ST <- "NM"
+ID <- colSums(lst[["ID"]][,c(3:7)]); ID <- t(ID); ID <- as.data.frame(ID); ID$ST <- "ID"
+NV <- colSums(lst[["NV"]][,c(3:7)]); NV <- t(NV); NV <- as.data.frame(NV); NV$ST <- "NV"
+MA <- colSums(lst[["MA"]][,c(3:7)]); MA <- t(MA); MA <- as.data.frame(MA); MA$ST <- "MA"
+MI <- colSums(lst[["MI"]][,c(3:7)]); MI <- t(MI); MI <- as.data.frame(MI); MI$ST <- "MI"
+NH <- colSums(lst[["NH"]][,c(3:7)]); NH <- t(NH); NH <- as.data.frame(NH); NH$ST <- "NH"
+KS <- colSums(lst[["KS"]][,c(3:7)]); KS <- t(KS); KS <- as.data.frame(KS); KS$ST <- "KS"
+SC <- colSums(lst[["SC"]][,c(3:7)]); SC <- t(SC); SC <- as.data.frame(SC); SC$ST <- "SC"
+WI <- colSums(lst[["WI"]][,c(3:7)]); WI <- t(WI); WI <- as.data.frame(WI); WI$ST <- "WI"
+WA <- colSums(lst[["WA"]][,c(3:7)]); WA <- t(WA); WA <- as.data.frame(WA); WA$ST <- "WA"
+NJ <- colSums(lst[["NJ"]][,c(3:7)]); NJ <- t(NJ); NJ <- as.data.frame(NJ); NJ$ST <- "NJ"
+CT <- colSums(lst[["CT"]][,c(3:7)]); CT <- t(CT); CT <- as.data.frame(CT); CT$ST <- "CT"
+WY <- colSums(lst[["WY"]][,c(3:7)]); WY <- t(WY); WY <- as.data.frame(WY); WY$ST <- "WY"
+RI <- colSums(lst[["RI"]][,c(3:7)]); RI <- t(RI); RI <- as.data.frame(RI); RI$ST <- "RI"
+HI <- colSums(lst[["HI"]][,c(3:7)]); HI <- t(HI); HI <- as.data.frame(HI); HI$ST <- "HI"
+DE <- colSums(lst[["DE"]][,c(3:7)]); DE <- t(DE); DE <- as.data.frame(DE); DE$ST <- "DE"
+DC <- colSums(lst[["DC"]][,c(3:7)]); DC <- t(DC); DC <- as.data.frame(DC); DC$ST <- "DC"
+
+AK <- c(300495,122640,116454,164676,163387); AK <- t(AK); AK <- as.data.frame(AK); AK$ST <- "AK"; names(AK)[names(AK) == "V1"] <- "Votes" ;names(AK)[names(AK) == "V2"] <- "Democrats.12..Votes."; names(AK)[names(AK) == "V3"] <- "Votes16.Clintonh"; names(AK)[names(AK) == "V4"] <- "Republicans.12..Votes."; names(AK)[names(AK) == "V5"] <- "Votes16.Trumpd"
+
+HI <- c(434697, 306658, 266891, 121015, 128847); HI <- t(HI); HI <- as.data.frame(HI); HI$ST <- "HI"; names(HI)[names(HI) == "V1"] <- "Votes" ;names(HI)[names(HI) == "V2"] <- "Democrats.12..Votes."; names(HI)[names(HI) == "V3"] <- "Votes16.Clintonh"; names(HI)[names(HI) == "V4"] <- "Republicans.12..Votes."; names(HI)[names(HI) == "V5"] <- "Votes16.Trumpd"
+
+SD$Votes <- 370093; SD$Votes16.Clintonh <- 117458	; SD$Votes16.Trumpd <- 227721
+
+#WV#
+Elections <- do.call("rbind", list(AR,OR, ME, MS, SD, IN,AZ, CA, GA, VA, VT, MO, KY, AK, LA, NE, MD, TX, MT, CO,FL, MN, IA, OK, IL, NY, OH, TN, ND, NC, PA, UT, AL, NM, ID, NV, MA, MI, NH, KS, SC, WI, WA, NJ, CT, WY, RI, HI, DE, DC))
+
+Elections$DEMPE12 <- round((Elections$Democrats.12..Votes./Elections$Votes)*100, 2)
+Elections$DEMPE16 <- round((Elections$Votes16.Clintonh/Elections$Votes)*100, 2)
+Elections$Rep12 <- round((Elections$Republicans.12..Votes./Elections$Votes)*100, 2)
+Elections$Rep16 <- round((Elections$Votes16.Trumpd/Elections$Votes)*100, 2)
+
+Elections$Winner12 <- ifelse(Elections$Democrats.12..Votes.>Elections$Republicans.12..Votes., Elections$DEMPE12, Elections$Rep12 ) 
+Elections$Winner16 <- ifelse(Elections$Votes16.Clintonh > Elections$Votes16.Trumpd, Elections$DEMPE16, Elections$Rep16 ) 
+Elections$PartyWinner12 <- ifelse(Elections$Democrats.12..Votes.>Elections$Republicans.12..Votes., "Democrats", "Republicans" ) 
+Elections$PartyWinner16 <- ifelse(Elections$Votes16.Clintonh > Elections$Votes16.Trumpd, "Democrats", "Republicans") 
+
+```
+
+## Elections descriptions (2012-2016)
+- We will use the result of the presidential election of 2012 and compared them with the 2016 presidential election.
+- In the election of 2012, Barack Obama was the candidate of the Democratic party and Mitt Romney was the Republican candidate. 
+- In the election of 2016, Hillary Clinton was the Democratic party candidate and Donal Trump for the Republican party. 
+- These two elections had completely different results. 
+- In one case, in the 2012, the democratic party won and Barrack Obama won his reelection. 
+- On the other hand, in the 2016 presidential election the republican party won. 
+
+
+
+## 2012 Presidential Results: Descriptive Map Plot 
+
+```{r eruptions, echo= FALSE, warning=FALSE}
+library(ggplot2)
+library(plotly)
+library(readxl)
+library(rjson)
+library(rgdal)
+library(dplyr)
+# Create hover text
+Elections$hover <- with(Elections, paste("Democrats:", DEMPE12,"%" ,'<br>', ST, '<br>', "Winner:", PartyWinner12, '<br>', "Winner:", Winner12, "%"))
+# Make state borders white
+borders <- list(color = toRGB("red"))
+# Set up some mapping options
+map_options <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+plot_ly(z = ~Elections$DEMPE12,  text = ~Elections$hover, locations = ~Elections$ST, 
+        type = 'choropleth', locationmode = 'USA-states', 
+        color = Elections$Winner12, colors = 'Blues', marker = list(line = borders)) %>%
+  layout(title = '2012 Presidential Election ', geo = map_options)
+
+
+```
+
+## 2016 Presidential Results: Descriptive Map Plot 
+```{r Election2016, echo= FALSE, warning=FALSE}
+# Create hover text
+Elections$hover <- with(Elections, paste("Democrats:", DEMPE16,"%" ,'<br>', ST, '<br>', "Winner:", PartyWinner16, '<br>', "Winner:", Winner16, "%"))
+# Make state borders white
+borders <- list(color = toRGB("red"))
+# Set up some mapping options
+map_options <- list(
+  scope = 'usa',
+  projection = list(type = 'albers usa'),
+  showlakes = TRUE,
+  lakecolor = toRGB('white')
+)
+
+plot_ly(z = ~Elections$DEMPE16,  text = ~Elections$hover, locations = ~Elections$ST, 
+        type = 'choropleth', locationmode = 'USA-states', 
+        color = Elections$Winner16, colors = 'Blues', marker = list(line = borders)) %>%
+  layout(title = '2016 Presidential Election ', geo = map_options)
+
+
+
+
+```
+
+## Election Comparison 
+```{r Election Comparison}
+Elections$ST <- factor(Elections$ST, levels = Elections[["ST"]])
+
+l <- list(
+  font = list(
+    family = "sans-serif",
+    size = 12,
+    color = "#000"),
+  bgcolor = "#E2E2E2",
+  bordercolor = "#FFFFFF",
+  borderwidth = 2)
+
+fig <- plot_ly(Elections, x = ~ST, y = ~DEMPE16, name = 'Democrats 2016', type = 'scatter', mode = 'lines',
+        line = list(color = 'rgb(205, 12, 24)', width = 4)) 
+fig <- fig %>% add_trace(y = ~DEMPE12, name = 'Democrats 2012', line = list(color = 'rgb(22, 96, 167)', width = 4)) 
+
+fig <- fig %>% layout(title = "Democrats percentage comparison 2012-2016",
+                      legend=list(title=list(text='<b> Election Year </b>')),
+                      xaxis = list(title = "States"),
+                      yaxis = list (title = "Percentage %"))
+
+fig <- fig %>% layout(legend = l)
+                    
+
+fig
+
+```
+
+
